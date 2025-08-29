@@ -1,47 +1,46 @@
-# Part 1: Create and work with a file (like your original)
-file = open("example.txt", "w")
-file.write("Hello world\n")
-file.close()
+# Step 1: Function to read from a file
+def read_file(filename):
+    with open(filename, "r") as file:
+        content = file.read()
+    return content
 
-file = open("example.txt", "r")
-data = file.readline()
-print("First line:", data)
-file.close()
 
-file = open("example.txt", "a")
-file.write("Today is amazing\n")
-file.close()
+# Step 2: Function to modify the content
+def modify_content(content):
+    # Example modification: Add stars around each line
+    lines = content.split("\n")
+    modified = "\n".join([f"* {line} *" for line in lines if line.strip()])
+    return modified
 
-# Part 2: Error handling (what the challenge asked for)
-input_filename = input("Enter the filename to read: ").strip()
 
-try:
-    file = open(input_filename, "r")
-    content = file.read()
-    print("\nFile content:")
-    print(content)
+# Step 3: Function to write to a new file
+def write_file(new_filename, content):
+    with open(new_filename, "w") as file:
+        file.write(content)
+
+
+# Step 4: Call the functions in sequence
+def main():
+    input_filename = input("Enter the filename to read: ").strip()
+    try:
+        original_content = read_file(input_filename)
+        modified_content = modify_content(original_content)
+
+        new_filename = f"modified_{input_filename}"
+        write_file(new_filename, modified_content)
+
+        # Step 5: Success message
+        print(f"Success! Modified file saved as '{new_filename}'")
+
+    except FileNotFoundError:
+        print("Error: File not found")
+    except OSError:
+        print("Error: Could not read or write the file")
+
+
+# Run the program
+if __name__ == "__main__":
+    main()
+
     
-    # Simple modification: add stars around each line
-    lines = content.split('\n')
-    modified_content = ""
-    for line in lines:
-        if line.strip():  # Only add non-empty lines
-            modified_content += f"⭐ {line} ⭐\n"
     
-    # Save modified version
-    new_file = open("modified_file.txt", "w")
-    new_file.write(modified_content)
-    new_file.close()
-    
-    print("\nModified file saved as 'modified_file.txt'")
-
-except FileNotFoundError:
-    print("Error: File not found")
-
-except:
-    print("Error: Could not read the file")
-
-finally:
-    if 'file' in locals() and not file.closed:
-        file.close()
-    print("Done!")
